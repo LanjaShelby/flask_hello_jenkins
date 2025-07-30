@@ -5,8 +5,8 @@ pipeline {
     stage('Test Python') {
       steps {
         sh '''
-          pip install -r requirements.txt
-          python test.py
+          pip3 install -r requirements.txt
+          python3 test.py
         '''
       }
     }
@@ -14,7 +14,6 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         sh '''
-          eval $(minikube docker-env)
           docker build -t flask_hello .
         '''
       }
