@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'python:3.10-slim'
+      image 'python:3.10'
     }
   }
 
@@ -9,7 +9,7 @@ pipeline {
     stage('Test Python') {
       steps {
         sh '''
-          python3 -m venv venv
+          python -m venv venv
           . venv/bin/activate
           pip install -r requirements.txt
           python test.py
