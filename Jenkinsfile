@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'python:3.12.11-bookworm'
+      image 'python:3.10-slim'
     }
   }
 
