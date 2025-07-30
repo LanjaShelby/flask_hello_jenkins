@@ -5,8 +5,10 @@ pipeline {
     stage('Test Python') {
       steps {
         sh '''
-          pip3 install -r requirements.txt
-          python3 test.py
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install -r requirements.txt
+          python test.py
         '''
       }
     }
