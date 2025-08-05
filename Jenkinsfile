@@ -2,7 +2,12 @@ pipeline {
   agent {
     docker {
       image 'python:3.10'
-      args '-v /home/lanjashelby/.minikube:/root/.minikube:ro'
+      //args '-v /home/lanjashelby/.minikube:/root/.minikube:ro'
+      args '''
+        -v /home/lanjashelby/.kube:/root/.kube:ro \
+        -v /home/lanjashelby/.minikube:/root/.minikube:ro \
+        -v /var/run/docker.sock:/var/run/docker.sock
+      '''
     }
   }
 
