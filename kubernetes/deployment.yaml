@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: flask
-          image: flask_hello
+          image: 192.168.49.1:4000/flask_hello
           imagePullPolicy: Never
           ports:
             - containerPort: 5000
