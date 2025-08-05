@@ -24,8 +24,8 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         sh '''
-          docker build -t localhost:4000/flask_hello .
-          docker push localhost:4000/flask_hello
+          docker build -t 192.168.49.1:4000/flask_hello .
+          docker push 192.168.49.1:4000/flask_hello
         '''
       }
     }
