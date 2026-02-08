@@ -57,13 +57,9 @@ spec:
             steps {
                 container('docker') {
                     sh '''
-                        # Démarrer un registry local si besoin
-                        docker ps | grep registry || docker run -d -p 4000:5000 --name registry registry:2
-                        sleep 3
-                        
-                        # Construire et pousser
-                        docker build -t localhost:4000/pythontest:latest .
-                        docker push localhost:4000/pythontest:latest
+                        # Construire et pousser vers le registry Kubernetes interne
+                        docker build -t registry.jenkins.svc.cluster.local:5000/pythontest:latest .
+                        docker push registry.jenkins.svc.cluster.local:5000/pythontest:latest
                     '''
                 }
             }
@@ -95,7 +91,7 @@ spec:
         app: pythontest
     spec:
       containers:
-      - image: localhost:4000/pythontest:latest
+      - image: registry.jenkins.svc.cluster.local:5000/pythontest:latest
         name: pythontest
         ports:
         - containerPort: 5000
@@ -120,8 +116,11 @@ EOF
 
                         kubectl apply -f kubernetes/deployment.yaml
                         kubectl apply -f kubernetes/service.yaml
+                        
+                        # Vérifier
                         kubectl get deployments
                         kubectl get services
+                        kubectl get pods
                     '''
                 }
             }
@@ -131,6 +130,12 @@ EOF
     post {
         always {
             echo 'Pipeline terminé'
+        }
+        success {
+            echo 'Pipeline réussi !'
+        }
+        failure {
+            echo 'Pipeline échoué'
         }
     }
 }
