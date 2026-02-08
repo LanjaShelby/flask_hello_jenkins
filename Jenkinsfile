@@ -44,24 +44,6 @@ spec:
     }
     
     stages {
-        stage('Setup Registry') {
-            steps {
-                container('docker') {
-                    sh '''
-                        # Démarrer le registry s'il n'existe pas
-                        if ! docker ps --format "{{.Names}}" | grep -q "^registry$"; then
-                            echo "Starting Docker registry on port 4000..."
-                            docker run -d -p 4000:5000 --name registry registry:2
-                            sleep 5
-                        fi
-                        
-                        # Vérifier
-                        docker ps | grep registry
-                    '''
-                }
-            }
-        }
-        
         stage('Test Python') {
             steps {
                 container('python') {
@@ -75,10 +57,12 @@ spec:
             steps {
                 container('docker') {
                     sh '''
-                        # Construire l'image
-                        docker build -t localhost:4000/pythontest:latest .
+                        # Démarrer un registry local si besoin
+                        docker ps | grep registry || docker run -d -p 4000:5000 --name registry registry:2
+                        sleep 3
                         
-                        # Pousser vers le registry
+                        # Construire et pousser
+                        docker build -t localhost:4000/pythontest:latest .
                         docker push localhost:4000/pythontest:latest
                     '''
                 }
